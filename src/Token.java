@@ -18,6 +18,8 @@ public class Token {
 
 	public void setTokenText(String tokenText) {
 		
+		tokenText = tokenText.trim();
+		
 		if (transformation.isGoBack()) {
 			tokenText = tokenText.substring(0, tokenText.length()-1);
 		}

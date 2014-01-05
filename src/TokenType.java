@@ -3,5 +3,7 @@ public enum TokenType {
 	Konstante,
 	Variable,
 	Struktur,
-	Liste
+	Liste, 
+	Zeichen,
+	String
 }
