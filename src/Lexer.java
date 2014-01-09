@@ -4,12 +4,12 @@ import java.util.*;
 
 public class Lexer {
 
-	private static String file = "/home/nino/file.pl";
 	private static List<Token> list;
 	private static String buffer;
 
 	public static void main(String[] args) throws Exception {
 		
+		String file = args[0];
 		list = new ArrayList<Token>();
 		buffer = "";
 		
@@ -23,15 +23,15 @@ public class Lexer {
 		automate.addTransformation(new Transformation(States.S0, States.S3, "[A-Z]", null, null, false, false));
 		automate.addTransformation(new Transformation(States.S0, States.S1, "[a-z]", null, null, false, false));
 		automate.addTransformation(new Transformation(States.S0, States.S0, "[\\[\\]]", TokenType.Liste, null, false, false));
-		automate.addTransformation(new Transformation(States.S0, States.S4, "[\\.\\!\t:-]", null, null, false, false));
-		automate.addTransformation(new Transformation(States.S0, States.S0, "[ ]", null, null, false, false));	
+		automate.addTransformation(new Transformation(States.S0, States.S4, "[\\.\\!:-]", null, null, false, false));
+		automate.addTransformation(new Transformation(States.S0, States.S0, "[ \t]", null, null, false, false));	
 		automate.addTransformation(new Transformation(States.S0, States.S0, "[,|)]", TokenType.Zeichen, null, false, false));
 		automate.addTransformation(new Transformation(States.S0, States.S5, "[']", TokenType.Zeichen, null, false, false));
 		
 		automate.addTransformation(new Transformation(States.S1, States.S1, "[a-zA-Z0-9_]", TokenType.Konstante, null, true, false));
 		automate.addTransformation(new Transformation(States.S1, States.S0, "[(]", TokenType.Struktur, TokenType.Zeichen, false, false));
 		automate.addTransformation(new Transformation(States.S1, States.S0, "[ ]", TokenType.Konstante, null, false, false));
-		automate.addTransformation(new Transformation(States.S1, States.S0, "[,|)]", TokenType.Konstante, TokenType.Zeichen, true, false));
+		automate.addTransformation(new Transformation(States.S1, States.S0, "[,|)]", TokenType.Konstante, TokenType.Zeichen, false, false));
 		automate.addTransformation(new Transformation(States.S1, States.S0, "[\\]]", TokenType.Konstante, TokenType.Liste, false, false));
 		automate.addTransformation(new Transformation(States.S1, States.S4, "[\\.\\!\t:-]", null, null, false, true));
 
@@ -45,7 +45,7 @@ public class Lexer {
 		automate.addTransformation(new Transformation(States.S4, States.S4, "[\\.\\!\t:-]", null, null, false, false));
 		automate.addTransformation(new Transformation(States.S4, States.S0, "[ ]", TokenType.Konstante, null, false, false));
 		automate.addTransformation(new Transformation(States.S4, States.S0, "[,|]", TokenType.Konstante, TokenType.Zeichen, true, false));
-		automate.addTransformation(new Transformation(States.S4, States.S0, "[\\]]", TokenType.Konstante, TokenType.Liste, false, false));
+		automate.addTransformation(new Transformation(States.S4, States.S0, "[\\]\\[]", TokenType.Konstante, TokenType.Liste, false, false));
 		automate.addTransformation(new Transformation(States.S4, States.S0, "[a-zA-Z0-9]", TokenType.Konstante, null, false, true));
 		
 		automate.addTransformation(new Transformation(States.S5, States.S5, "[a-zA-Z0-9 ]", null, null, false, true));
