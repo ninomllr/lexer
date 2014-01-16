@@ -1,0 +1,510 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package auto
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\rightmargin 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Prolog Lexer
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Einführung
+\end_layout
+
+\begin_layout Section
+Beschreibung
+\end_layout
+
+\begin_layout Standard
+Simpler Lexer für Prolog.
+ Der Lexer wurde ausschliesslich mit dem Übungsfile blocksworld.pl erfolgreich
+ getestet.
+ Der Automat des Lexers ist komplett dynamisch und könnte theoretisch auch
+ für andere Sprachen verwendet werden.
+ Der Automat arbeitet mit Regex um Zeichenmengen zu erkennen, arbeitet aber
+ sich aber bei jedem String Zeichen (char) für Zeichen (char) durch das
+ komplette File.
+ Der Lexer kann auch gleich einstufen um welche Kategorie es sich bei dem
+ Token handelt.
+\end_layout
+
+\begin_layout Section
+Verwendung
+\end_layout
+
+\begin_layout Quote
+java -jar lexer.jar /home/nino/file.pl
+\end_layout
+
+\begin_layout Part
+Grammatik
+\end_layout
+
+\begin_layout Section
+Allgemeine Definitionen
+\end_layout
+
+\begin_layout Quote
+<Prolog> ::= <Steuerzeichen> | <Term> | <Kommentar> 
+\end_layout
+
+\begin_layout Quote
+<Term> ::= <Konstante> | <Variable> | <Struktur> 
+\end_layout
+
+\begin_layout Section
+Zeichenmenge
+\end_layout
+
+\begin_layout Quote
+<Steuerzeichen> ::= Zeilenumbruch | Leerzeichen | Tabulator 
+\end_layout
+
+\begin_layout Quote
+<Kleinbuchstabe> ::= a | b | c | d | e | f | g | h | i | j | k | l | m |
+ n | o | p | q | r | s | t | u | v | w | x | y | z 
+\end_layout
+
+\begin_layout Quote
+<Grossbuchstabe> ::= A | B | C | D | E | F | G | H | I | J | K | L | M |
+ N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+\end_layout
+
+\begin_layout Quote
+<Ziffer> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+\end_layout
+
+\begin_layout Quote
+<Symbol> ::= ( | ) | [ | ] | { | } | .
+ | | | ! | = | < | : > | + | ­ | * | / | ^
+\end_layout
+
+\begin_layout Section
+Konstanten
+\end_layout
+
+\begin_layout Quote
+<Konstante> ::= <Atom> | <Zahl> 
+\end_layout
+
+\begin_layout Quote
+<Atom> ::= <AtomBeginn> [<AtomInhalt>] 
+\end_layout
+
+\begin_layout Quote
+<AtomBeginn> ::= <Kleinbuchstabe> 
+\end_layout
+
+\begin_layout Quote
+<AtomInhalt> ::= { <Grossbuchstabe> | <Kleinbuchstabe> | <Ziffer> } 
+\end_layout
+
+\begin_layout Quote
+<Zahl> ::= <Ziffer> { <Ziffer> }
+\end_layout
+
+\begin_layout Section
+Variable
+\end_layout
+
+\begin_layout Quote
+<Variable> ::= <VariableBeginn> [<VariableInhalt>] | _ 
+\end_layout
+
+\begin_layout Quote
+<VariableBeginn> ::= <Grossbuchstabe> 
+\end_layout
+
+\begin_layout Quote
+<VariableInhalt> ::= <AtomInhalt>
+\end_layout
+
+\begin_layout Section
+String
+\end_layout
+
+\begin_layout Quote
+<String> ::= <StringBeginn><StringInhalt><StringEnde> 
+\end_layout
+
+\begin_layout Quote
+<StringBeginn> ::= Hochkomma 
+\end_layout
+
+\begin_layout Quote
+<StringInhalt> ::= { <Grossbuchstabe> | <Kleinbuchstabe> | <Ziffer> | <Symbol>
+ } 
+\end_layout
+
+\begin_layout Quote
+<StringEnde> ::= Hochkomma
+\end_layout
+
+\begin_layout Section
+Kommentar
+\end_layout
+
+\begin_layout Quote
+<Kommentar> ::= <KommentarBeginn> <KommentarInhalt> <KommentarEnde> 
+\end_layout
+
+\begin_layout Quote
+<KommentarBeginn> ::= % 
+\end_layout
+
+\begin_layout Quote
+<KommentarInhalt> ::= { <Grossbuchstabe> | <Kleinbuchstabe> | <Ziffer> |
+ <Symbol> } 
+\end_layout
+
+\begin_layout Quote
+<KommentarEnde> ::= Zeilenumbruch | Dateiende
+\end_layout
+
+\begin_layout Section
+Struktur
+\end_layout
+
+\begin_layout Quote
+<Struktur> ::= 
+\end_layout
+
+\begin_layout Section
+Liste
+\end_layout
+
+\begin_layout Quote
+<Liste> ::= <ListeStart>{<ListeInhalt><ListeTrennzeichen>}<ListeEnde> 
+\end_layout
+
+\begin_layout Quote
+<ListeStart> ::= [ 
+\end_layout
+
+\begin_layout Quote
+<ListeEnde> ::= ] 
+\end_layout
+
+\begin_layout Quote
+<ListeTrennzeichen> ::= | 
+\end_layout
+
+\begin_layout Quote
+<ListeInhalt> ::= <Variable> | <String> | <Konstante> | <Atom> | Struktur>
+\end_layout
+
+\begin_layout Part
+Automat
+\end_layout
+
+\begin_layout Section
+Automaten-Graph
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/nino/Desktop/automat.jpeg.jpeg
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es ist zu beachten, dass der Automaten-Graph weniger zustände aufzeigt als
+ später definiert werden.
+ Grund dazu ist, dass verschiedene Token-Typen erstellt werden müssen.
+ Teilweise wird das letzte Zeichen zu einem neuen, einzelnen Token definiert.
+ Es gibt auch die Möglichkeit das letzte Zeichen direkt an das nächste Token
+ anzuhängen.
+ Sehen Sie dazu bitte das nächste Kapitel.
+ 
+\end_layout
+
+\begin_layout Section
+Einführung zur Transformationsdefintion
+\end_layout
+
+\begin_layout Standard
+Die Definition ist folgendermassen: 
+\end_layout
+
+\begin_layout Quote
+Transformation(VON_STATUS, ZU_STATUS, ERLAUBTE_ZEICHENMENGE, TOKEN_TYP,
+ TOKEN_TYP_LETZTES_SYMBOL, NUR_EOL, GEHE_ZURUECK);
+\end_layout
+
+\begin_layout Quote
+TOKEN_TYP = alle Zeichen im Buffer werden nun zu einem Token mit TOKEN_TYP
+ gemacht, ausser es ist NULL dann ist es kein Endzustand
+\end_layout
+
+\begin_layout Quote
+TOKEN_TYP_LETZTES_SYMBOL = das letzte Symbol wird zu einem anderen Token
+ gemacht und vom Hauptbuffer abgezogen 
+\end_layout
+
+\begin_layout Quote
+NUR_EOL = es wird nur ein Token erstellt, wenn man EOL ist 
+\end_layout
+
+\begin_layout Quote
+GEHE_ZURUECK = das letzte Symbol wird nicht dem Token angehängt sondern
+ verbleibt im Buffer und gehört bereits zum nächsten Token
+\end_layout
+
+\begin_layout Section
+Automatendefinition im Code
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S2, "[%]", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S2, "/", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S0, "[_]", TokenType.Variable, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S3, "[A-Z]", null, null, false, false));
+ 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S1, "[a-z]", null, null, false, false));
+ 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S0, "[
+\backslash
+
+\backslash
+[
+\backslash
+
+\backslash
+]]", TokenType.Liste, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S4, "[
+\backslash
+
+\backslash
+.
+\backslash
+
+\backslash
+!:-]", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S0, "[ 
+\backslash
+t]", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S0, "[,|)]", TokenType.Zeichen, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S0, States.S5, "[']", TokenType.Zeichen, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S1, "[a-zA-Z0-9_]", TokenType.Konstante, null,
+ true, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S0, "[(]", TokenType.Struktur, TokenType.Zeichen,
+ false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S0, "[ ]", TokenType.Konstante, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S0, "[,|)]", TokenType.Konstante, TokenType.Zeichen
+, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S0, "[
+\backslash
+
+\backslash
+]]", TokenType.Konstante, TokenType.Liste, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S1, States.S4, "[
+\backslash
+
+\backslash
+.
+\backslash
+
+\backslash
+!
+\backslash
+t:-]", null, null, false, true));
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S2, States.S2, ".*", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S3, States.S3, "[a-zA-Z0-9_]", TokenType.Konstante, null,
+ true, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S3, States.S0, "[ ]", TokenType.Variable, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S3, States.S0, "[,|)]", TokenType.Variable, TokenType.Zeichen,
+ false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S3, States.S0, "[
+\backslash
+
+\backslash
+]]", TokenType.Variable, TokenType.Liste, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S4, States.S4, "[
+\backslash
+
+\backslash
+.
+\backslash
+
+\backslash
+!
+\backslash
+t:-]", null, null, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S4, States.S0, "[ ]", TokenType.Konstante, null, false,
+ false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S4, States.S0, "[,|]", TokenType.Konstante, TokenType.Zeichen,
+ true, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S4, States.S0, "[
+\backslash
+
+\backslash
+]
+\backslash
+
+\backslash
+[]", TokenType.Konstante, TokenType.Liste, false, false)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S4, States.S0, "[a-zA-Z0-9]", TokenType.Konstante, null,
+ false, true)); 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S5, States.S5, "[a-zA-Z0-9 ]", null, null, false, true));
+ 
+\end_layout
+
+\begin_layout Quote
+Transformation(States.S5, States.S0, "[']", TokenType.String, TokenType.Zeichen,
+ false, false)); 
+\end_layout
+
+\end_body
+\end_document
